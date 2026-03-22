@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>任務挑戰</title>
+    <style>
+        body { font-family: "微軟正黑體", sans-serif; background-color: #f4f7f6; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid #2ecc71; padding-bottom: 10px; margin-bottom: 20px; }
+        h1 { color: #27ae60; margin: 0; }
+        .task-info { background: #e8f8f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .btn-back { display: inline-block; background-color: #95a5a6; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin-top: 20px;}
+        .btn-start { display: inline-block; background-color: #e74c3c; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin-top: 20px; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ 任務挑戰準備區</h1>
+        </div>
+
+        <div class="task-info">
+            <h2>任務名稱：{{ task.aid.name }}</h2>
+            <p><strong>📝 任務內容：</strong>{{ task.aid.content }}</p>
+            <p><strong>🏆 破關獎勵：</strong>{{ task.aid.reward }} 點積分</p>
+            <p><strong>⏰ 截止日期：</strong>{{ task.due_date|date:"Y年m月d日" }}</p>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/student/dashboard/" class="btn-back">⬅️ 先不要，回大廳</a>
+            <a href="#" class="btn-start">🔥 我準備好了，開始測驗！</a>
+        </div>
+    </div>
+</body>
+</html>
