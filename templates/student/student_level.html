@@ -1,0 +1,57 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ grade }} 年級</title>
+    <link rel="stylesheet" href="{% static 'css/student_style.css' %}" />
+  </head>
+  <body>
+    <button class="btn-back" onclick="location.href = '{% url 'student_dashboard' %}'">⬅ 返回地圖</button>
+
+    <h1>進入 {{ grade }} 年級！</h1>
+    <h3 id="modeDisplay" style="color: #d32f2f">目前模式：一般模式 (單字勾選與繪本)</h3>
+
+    <div class="level-grid">
+      {% for level in levels %}
+      <button class="btn" onclick="goToLevel('{{ level.id }}')">{{ level.name }}</button>
+      {% empty %}
+      <p>目前還沒有開放關卡喔！</p>
+      {% endfor %}
+    </div>
+
+    <hr style="margin: 30px 0" />
+    <button class="btn" style="background-color: #4caf50" onclick="toggleMode()">🔄 切換至 總複習模式</button>
+
+    <script>
+      // 預設模式為一般模式
+      let isGeneralMode = true;
+
+      // 模式切換邏輯
+      function toggleMode() {
+        isGeneralMode = !isGeneralMode; // 反轉狀態
+        let display = document.getElementById("modeDisplay");
+        let toggleBtn = event.target; // 抓取被點擊的切換按鈕
+
+        if (isGeneralMode) {
+          display.innerText = "目前模式：一般模式 (單字勾選與繪本)";
+          toggleBtn.innerText = "🔄 切換至 總複習模式";
+        } else {
+          display.innerText = "目前模式：總複習模式 (老師出題測驗)";
+          toggleBtn.innerText = "🔄 切換至 一般模式";
+        }
+      }
+
+      // 點擊關卡時的導向邏輯
+      function goToLevel(levelId) {
+        if (isGeneralMode) {
+          // 一般模式：導向單字勾選 (未來我們再把它換成 Django 專屬路徑)
+          window.location.href = "/word_selection/" + levelId;
+        } else {
+          // 總複習模式：導向測驗 (未來我們再把它換成 Django 專屬路徑)
+          window.location.href = "/review_test/" + levelId;
+        }
+      }
+    </script>
+  </body>
+</html>

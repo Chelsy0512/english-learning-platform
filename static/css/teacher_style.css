@@ -1,0 +1,178 @@
+body { font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+
+/* 側邊欄樣式 */
+#sidebar {
+    width: 250px;
+    background-color: #333;
+    color: white;
+    display: flex; /* 預設顯示，可透過 JS 隱藏 */
+    flex-direction: column;
+    padding-top: 50px; /* 留空間給左上角按鈕 */
+    transition: 0.3s;
+}
+
+#sidebar.closed {
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* 側邊欄連結樣式 */
+.menu-item {
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+.menu-item:hover { background-color: #555; }
+
+/* 第二層選單 (縮排) */
+.submenu {
+    background-color: #444;
+    display: none; /* 預設摺疊 */
+}
+.submenu-item {
+    padding: 10px 20px 10px 40px; /* 左側縮排 40px */
+    cursor: pointer;
+    border-bottom: 1px solid #555;
+    font-size: 0.9em;
+    color: #ddd;
+}
+.submenu-item:hover { background-color: #666; color: white; }
+
+/* 主內容區域 */
+#main-content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* 左上角展開按鈕 */
+#toggle-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+    background: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* 內容區塊控制 */
+.content-section { display: none; } /* 所有內容預設隱藏 */
+.content-section.active { display: block; } /* 只有被選中的顯示 */
+
+h2 { border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-top: 50px; }
+.form-group { margin-bottom: 15px; padding: 10px; border: 1px solid #eee; background: #f9f9f9; }
+label { display: block; margin-bottom: 5px; font-weight: bold; }
+input, select, button { padding: 8px; margin-right: 10px; }
+.chart-box { border: 1px dashed #999; padding: 20px; text-align: center; margin: 10px 0; background: #fff; }
+
+.reminder { 
+    color: red; 
+    font-size: 0.85em; 
+    display: none; /* 預設隱藏 */
+    margin-top: 5px; 
+    font-weight: normal;
+}
+
+/* 移除所有 li 的前綴圓點並清除預設內縮 */
+ul { list-style-type: none; padding-left: 0; }
+
+/* 學習狀況 - 成績表格樣式 */
+.table-container {
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    margin: 15px 0;
+}
+.status-table {
+    border-collapse: collapse;
+    white-space: nowrap; /* 強制不換行，由內容撐開寬度 */
+}
+.status-table th, .status-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+.status-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* 學習狀況 - 右側詳細資訊面板 */
+.learning-info-panel {
+    display: none; /* 預設隱藏 */
+    vertical-align: top;
+    padding: 20px;
+    margin-left: 20px;
+    margin-top: 15px;
+    background: #fdfdfd;
+    border: 1px solid #ddd;
+    min-width: 300px;
+    white-space: normal; /* 允許內部換行 */
+}
+
+/* 簡易長條圖樣式 */
+.chart-wrapper {
+    border: 1px dashed #aaa;
+    padding: 15px;
+    margin-top: 15px;
+    background: #fff;
+}
+/* 垂直長條圖 (答對人數) */
+.bar-vertical-container { display: flex; align-items: flex-end; height: 120px; gap: 8px; border-bottom: 1px solid #333; border-left: 1px solid #333; padding-left: 5px; margin-top: 10px;}
+.bar-vertical-col { display: flex; flex-direction: column; align-items: center; }
+.bar-vertical { width: 20px; background-color: #4CAF50; }
+.bar-vertical-label { font-size: 10px; margin-top: 5px; }
+/* 水平長條圖 (成績區間) */
+.bar-horizontal-container { display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #333; border-bottom: 1px solid #333; padding-bottom: 5px; margin-top: 10px;}
+.bar-horizontal-row { display: flex; align-items: center; }
+.bar-horizontal-label { width: 55px; font-size: 12px; text-align: right; margin-right: 8px; }
+.bar-horizontal { height: 16px; background-color: #2196F3; }
+
+/* 新增的學生名單樣式 */
+.chart-box-student-list {
+    border: 1px dashed #999;
+    padding: 20px;
+    text-align: left; /* 全部置左排列 */
+    background: #fff;
+    width: 30%; /* 寬度 30% */
+    display: inline-block; /* 允許與右側區塊並排 */
+    vertical-align: top;
+    box-sizing: border-box;
+}
+/* 預設 label 為 5px，ul 為 1em 約 16px */
+.chart-box-student-list label { margin-bottom: 16px; display: block; }
+.chart-box-student-list ul { margin-top: 5px; margin-bottom: 5px; display: none; /* 預設隱藏清單 */ }
+.chart-box-student-list li { cursor: pointer; padding: 8px 0; border-bottom: 1px solid #eee; }
+.chart-box-student-list li:hover { background-color: #f4f4f4; }
+
+/* 座號樣式 */
+.seat-num {
+    display: inline-block;
+    width: 30px; /* 固定寬度讓座號對齊 */
+    text-align: right;
+    margin-right: 15px;
+    color: #888;
+    font-size: 0.9em;
+}
+/* 右側剩餘 70% 的學生基本資料區塊 */
+.student-info-panel {
+    width: 68%;
+    display: inline-block;
+    vertical-align: top;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fdfdfd;
+    border: 1px solid #ddd;
+    margin-left: 1%;
+}
+.info-row { margin-bottom: 10px; }
+.info-title { font-weight: bold; }

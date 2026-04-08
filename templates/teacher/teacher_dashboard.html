@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教師管理端</title>
+    <link rel="stylesheet" href="{% static 'css/teacher_style.css' %}">
+</head>
+<body>
+
+    <button id="toggle-btn" onclick="toggleSidebar()">&#9776; 選單</button>
+
+    <div id="sidebar">
+        <div class="menu-item" onclick="showContent('home')">首頁 / 個人設定</div>
+
+        <div class="menu-item" onclick="toggleSubmenu('sub-class')">班級管理 (▼)</div>
+        <div id="sub-class" class="submenu">
+            <div class="submenu-item" onclick="showContent('class-new')">新增班級</div>
+            <div class="submenu-item" onclick="showContent('class-manage')">現有班級管理</div>
+        </div>
+
+        <div class="menu-item" onclick="showContent('learning')">學習狀況</div>
+
+        <div class="menu-item" onclick="toggleSubmenu('sub-db')">總測驗 (▼)</div>
+        <div id="sub-db" class="submenu">
+            <div class="submenu-item" onclick="showContent('db-new')">新增測驗</div>
+            <div class="submenu-item" onclick="showContent('db-manage')">管理測驗</div>
+        </div>
+        
+        <div class="menu-item" style="margin-top:auto; background:#cc0000;" onclick="window.location.href='login.html'">登出</div>
+    </div>
+
+    <div id="main-content">
+        <div id="home" class="content-section active">
+            <h2>歡迎回來</h2>
+            <div class="form-group" style="display: flex; align-items: center;">
+                <label style="margin-bottom: 0; margin-right: 10px;">使用者名稱：</label>
+                <input type="text" id="username-input" value="王小明">
+                <button onclick="confirmNameChange()">確認更改</button>
+                <button onclick="cancelNameChange()">取消</button>
+            </div>
+        </div>
+
+        <div id="class-new" class="content-section">
+            <h2>新增班級</h2>
+            <div class="form-group">
+                <label>輸入班級名稱：</label>
+                <input type="text" id="new-class-input" placeholder="例如：一年五班">
+                <button onclick="addClass()">確認新增</button>
+                <div id="class-reminder" class="reminder"></div>
+            </div>
+
+            <div class="chart-box">[已擁有班級顯示區(含班級名稱及人數)]</div>
+
+        </div>
+
+        <div id="class-manage" class="content-section">
+            <h2>現有班級管理</h2>
+            <div class="form-group">
+                <label style="display: inline-block; margin-bottom: 0;">選擇班級：</label>
+                <select id="class-selector" onchange="changeClass()">
+                    <option value="">請選擇...</option>
+                    <option value="classA">班級A</option>
+                    <option value="classB">班級B</option>
+                </select>
+            </div>
+            
+            <div>
+                <div class="chart-box-student-list">
+                    <label>學生名單</label>
+                    <ul id="dynamic-student-list" style="display: none;"></ul>
+                </div>
+
+                <div id="student-detail" class="student-info-panel" style="display: none;">
+                    <div class="info-row"><span class="info-title" style="font-size: 1.5em;" id="stu-name"></span></div>
+                    <div class="info-row"><span class="info-title">暱稱：</span><span id="stu-nickname"></span></div>
+                    <div class="info-row"><span class="info-title">喜好：</span><span id="stu-hobby"></span></div>
+                    <div class="info-row">
+                        <span class="info-title">已獲得星數：</span><span id="stu-stars"></span>
+                        <button style="margin-left: 10px; padding: 2px 8px;">星星兌換</button>
+                </div>
+                <hr>
+                <button>移動學生</button>
+            </div>
+        </div>
+
+        <div id="learning" class="content-section">
+            <h2>學習狀況看板</h2>
+            <div class="form-group">
+                <label style="display: inline-block; margin-bottom: 0;">選擇班級：</label>
+                <select id="learning-class-selector" onchange="changeLearningClass()">
+                    <option value="">請選擇...</option>
+                    <option value="classA">班級A</option>
+                    <option value="classB">班級B</option>
+                </select>
+            </div>
+            
+            <div style="white-space: nowrap; overflow-x: auto; padding-bottom: 20px;">
+                
+                <div class="table-container">
+                    <table class="status-table">
+                        <thead>
+                            <tr>
+                                <th>座號</th>
+                                <th>姓名</th>
+                                <th onclick="showExamStats('單元一')" style="cursor: pointer; color: #0066cc; text-decoration: underline;">單元一總複習成績</th>
+                                <th onclick="showExamStats('單元二')" style="cursor: pointer; color: #0066cc; text-decoration: underline;">單元二總複習成績</th>
+                            </tr>
+                        </thead>
+                        <tbody id="learning-status-tbody">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="learning-detail-panel" class="learning-info-panel">
+                    </div>
+
+                </div> <div id="unit-stats-container" style="display: none; margin-top: 10px; padding-top: 15px; border-top: 2px dashed #ccc;">
+                    <h3 style="margin-top: 0; padding-bottom: 5px;">各單元總複習統計</h3>
+                    
+                    <div class="chart-wrapper" style="width: 300px;">
+                        <div style="font-size: 13px; font-weight: bold;">各單元平均分數比較</div>
+                        <div class="bar-vertical-container" id="unit-stats-chart" style="height: 120px; justify-content: space-around;">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="db-new" class="content-section">
+            <h2>新增測驗</h2>
+            <div class="form-group">
+                <label>建立新測驗：</label>
+                <button>開始建立</button>
+            </div>
+            <div class="form-group">
+                <label>出題設定：</label>
+                <select><option>編輯負擔單元...</option></select>
+                <label><input type="checkbox"> AI 自動出題</label>
+                <button>預覽出題</button>
+                <hr>
+                <button>儲存測驗</button>
+            </div>
+        </div>
+
+        <div id="db-manage" class="content-section">
+            <h2>管理測驗</h2>
+            <div class="form-group">
+                <label>測驗列表：</label>
+                <ul>
+                    <li>
+                        <strong>測驗單元 1</strong>
+                        <button>編輯單元</button>
+                        <button>及格標準</button>
+                        <button>編輯題庫</button>
+                    </li>
+                    <li>
+                        <strong>測驗單元 2</strong>
+                        <button>編輯單元</button>
+                        <button>及格標準</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/teacher_dashboard.js' %}"></script>
+</body>
+</html>

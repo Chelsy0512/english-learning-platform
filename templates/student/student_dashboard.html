@@ -1,0 +1,102 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>探索世界地圖</title>
+    <link rel="stylesheet" href="{% static 'css/student_style.css' %}" />
+  </head>
+  <body>
+    <h1>🌍 歡迎來到英文冒險世界！</h1>
+    <p>請選擇你要前往的區域：</p>
+
+    <a href="{% url 'student_level' grade=5 %}" class="btn">五年級關卡</a>
+    <a href="{% url 'student_level' grade=6 %}" class="btn">六年級關卡</a>
+    <a href="{% url 'student_tower' %}" class="btn">挑戰之塔</a>
+    <a href="{% url 'student_store' %}" class="btn">星星商城</a>
+
+    <br /><br />
+
+    <button class="btn" onclick="openModal('honorModal')">🏆 榮譽榜</button>
+    <button class="btn" onclick="openModal('licenseModal')">🎫 我的冒險證照</button>
+
+    <div id="honorModal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('honorModal')">&times;</span>
+        <h2 style="text-align: center">🏆 榮譽榜</h2>
+        {% for player in leaderboard %}
+        <p>{{ forloop.counter }}. {{ player.name }} - {{ player.stars }} ⭐</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div id="licenseModal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('licenseModal')">&times;</span>
+        <h2 style="text-align: center">🎫 冒險證照</h2>
+
+        <div class="edit-container">
+          <div>
+            <strong>名字：</strong>
+            <span>{{ user_profile.name }}</span>
+          </div>
+          <div style="width: 50px"></div>
+        </div>
+
+        <div class="edit-container">
+          <div>
+            <strong>班級：</strong>
+            <span>{{ user_profile.class_name }}</span>
+          </div>
+          <div style="width: 50px"></div>
+        </div>
+
+        <div class="edit-container">
+          <div>
+            <strong>稱號：</strong>
+            <span id="display-title">{{ user_profile.title }}</span>
+            <input type="text" id="input-title" class="hidden" value="{{ user_profile.title }}" />
+          </div>
+          <button class="btn" style="padding: 5px 10px; font-size: 12px; margin: 0" onclick="toggleEdit('title')">
+            修改
+          </button>
+        </div>
+
+        <div class="edit-container" style="flex-direction: column; align-items: flex-start">
+          <div style="width: 100%; display: flex; justify-content: space-between">
+            <strong>喜好：</strong>
+            <button class="btn" style="padding: 5px 10px; font-size: 12px; margin: 0" onclick="toggleEditPreferences()">
+              修改
+            </button>
+          </div>
+
+          <div id="display-preferences" style="margin-top: 5px; color: #555">{{ user_profile.preferences|join:", " }}</div>
+
+          <div id="input-preferences" class="hidden" style="margin-top: 5px">
+            <label style="display: inline-block; margin-right: 10px; cursor: pointer">
+              <input type="checkbox" value="科學" {% if "科學" in user_profile.preferences %}checked{% endif %} /> 科學
+            </label>
+            <label style="display: inline-block; margin-right: 10px; cursor: pointer">
+              <input type="checkbox" value="旅遊" {% if "旅遊" in user_profile.preferences %}checked{% endif %} /> 旅遊
+            </label>
+            <label style="display: inline-block; margin-right: 10px; cursor: pointer">
+              <input type="checkbox" value="藝術" {% if "藝術" in user_profile.preferences %}checked{% endif %} /> 藝術
+            </label>
+            <label style="display: inline-block; margin-right: 10px; cursor: pointer">
+              <input type="checkbox" value="體育" {% if "體育" in user_profile.preferences %}checked{% endif %} /> 體育
+            </label>
+            <label style="display: inline-block; margin-right: 10px; cursor: pointer">
+              <input type="checkbox" value="音樂" {% if "音樂" in user_profile.preferences %}checked{% endif %} /> 音樂
+            </label>
+            <label style="display: inline-block; margin-right: 10px; cursor: pointer">
+              <input type="checkbox" value="遊戲" {% if "遊戲" in user_profile.preferences %}checked{% endif %} /> 遊戲
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/student_dashboard.js' %}"></script>
+  </body>
+</html>

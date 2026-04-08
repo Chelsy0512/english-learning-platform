@@ -1,0 +1,50 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>挑戰之塔</title>
+    <link rel="stylesheet" href="{% static 'css/student_style.css' %}" />
+  </head>
+  <body>
+    <button class="btn-back" onclick="location.href = '{% url 'student_dashboard' %}'">⬅ 返回地圖</button>
+
+    <h1>🗼 挑戰之塔</h1>
+    <p>必須通過底層關卡，才能往上挑戰喔！</p>
+
+    <div class="tower-container">
+      {% for level in tower_levels %}
+      <button
+        class="btn"
+        id="tower-btn-{{ level.id }}"
+        {% if not level.is_unlocked %}disabled{% endif %}
+        onclick="playLevel(parseInt('{{ level.id }}', 10), '{{ level.name }}')"
+      >
+        關卡{{ level.id }} {{ level.name }}
+      </button>
+      {% empty %}
+      <p>挑戰之塔還在施工中！</p>
+      {% endfor %}
+    </div>
+
+    <script>
+      // 測試用：點擊關卡後，自動解鎖下一層
+      function playLevel(currentId, levelName) {
+        alert("進入 " + levelName + " 關卡！恭喜通關！");
+
+        let nextId = currentId + 1;
+        let nextBtn = document.getElementById("tower-btn-" + nextId);
+
+        // 如果有下一關，就解除鎖定
+        if (nextBtn) {
+          nextBtn.disabled = false; // 解除 disabled 狀態，按鈕就會恢復！
+
+          // 動態賦予下一關點擊功能
+          nextBtn.onclick = function () {
+            playLevel(nextId, "關卡 " + nextId);
+          };
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>星星商城</title>
+    <link rel="stylesheet" href="{% static 'css/student_style.css' %}" />
+  </head>
+  <body>
+    <button class="btn-back" onclick="location.href = '{% url 'student_dashboard' %}'">⬅ 返回地圖</button>
+
+    <h1>🛒 星星商城</h1>
+    <p>
+      你目前擁有：<strong id="current-stars">{{ stars }}</strong> ⭐
+      <button
+        class="btn"
+        style="padding: 5px 10px; font-size: 12px; background-color: #4caf50"
+        onclick="addTestStars()"
+      >
+        + 增加 100 星星 (測試用)
+      </button>
+    </p>
+
+    <div class="store-container">
+      {% for item in items %}
+      <div class="store-item" style="border: 1px solid #ccc; padding: 15px; margin: 10px; display: inline-block; border-radius: 8px;">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.cost }} ⭐</p>
+        <button
+          class="btn"
+          style="padding: 10px; font-size: 14px"
+          onclick="redeemItem(parseInt('{{ item.cost }}', 10), '{{ item.name }}')"
+        >
+          兌換
+        </button>
+      </div>
+      {% empty %}
+      <p>商城目前正在補貨中！</p>
+      {% endfor %}
+    </div>
+
+    <script>
+      // 讀取從 Django 傳過來的初始星星數量
+      let currentStars = parseInt("{{ stars }}", 10);
+
+      // 💡 測試用：增加星星的函式 (純前端模擬)
+      function addTestStars() {
+        currentStars += 100;
+        document.getElementById("current-stars").innerText = currentStars;
+        // 未來這裡要換成真實的 API 呼叫： fetch("/api/add_stars"...
+      }
+
+      // 兌換商品的函式 (純前端模擬)
+      function redeemItem(cost, itemName) {
+        if (currentStars >= cost) {
+          // 模擬扣款成功
+          currentStars -= cost;
+          document.getElementById("current-stars").innerText = currentStars;
+          alert(`兌換成功！獲得了 ${itemName}。剩下 ${currentStars} 顆星星！`);
+          // 未來這裡要換成真實的 API 呼叫： fetch("/api/buy"...
+        } else {
+          alert(`星星不夠喔！還差 ${cost - currentStars} 顆⭐`);
+        }
+      }
+    </script>
+  </body>
+</html>

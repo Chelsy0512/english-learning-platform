@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>開始測驗</title>
+    <style>
+        body { font-family: "微軟正黑體", sans-serif; background-color: #f4f7f6; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .question-card { background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #f1c40f; }
+        .submit-btn { background-color: #e74c3c; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%;}
+        .submit-btn:hover { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 測驗：{{ quiz.title }}</h1>
+        <hr>
+        
+        <form method="POST">
+            {% csrf_token %}
+
+            {% for q in questions_data %}
+                <div class="question-card">
+                    <h3>第 {{ forloop.counter }} 題：{{ q.text }}</h3>
+                    
+                    {% for opt in q.options %}
+                        <label style="display: block; margin: 10px 0; cursor: pointer;">
+                            <input type="radio" name="{{ q.id }}" value="{{ opt }}" required>
+                            {{ opt }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="submit-btn">✅ 我寫完了，提交考卷！</button>
+        </form>
+    </div>
+</body>
+</html>
